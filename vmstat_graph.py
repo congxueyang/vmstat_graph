@@ -62,7 +62,7 @@ HUMAN_HEADERS = {
     'st': 'Stolen VM CPU %',
 }
 
-def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, intervalized=False):
+def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, intervalized=False, logarithmicy=True):
     # Prepare marker list
     mks = set(matplotlib.markers.MarkerStyle().markers.keys())
     # Remove unwanted ones
@@ -92,8 +92,10 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, 
     ax.set_xlabel('Time', labelpad=20, fontsize=14)
 
     # Experiment with logarithmic scale
-    plotter = plt.semilogy
-    #~ plotter = plt.plot
+    if logarithmicy:
+        plotter = plt.semilogy
+    else:
+        plotter = plt.plot
 
     for header, data in dataset.items():
         if header in HUMAN_HEADERS:
@@ -132,7 +134,7 @@ def read_input(fin):
             data.append(elems)
     return headers, data
 
-def doit(datafile, cols, ram, interval, plotfile, display):
+def doit(datafile, cols, ram, interval, plotfile, display, logy):
     if datafile is None or datafile == '-':
         headers, data = read_input(sys.stdin)
     else:
@@ -166,7 +168,7 @@ def doit(datafile, cols, ram, interval, plotfile, display):
     # Filter only interesting vmstat columns
     dataset_plot = {h: dataset[h] for h in cols}
 
-    plotit(dataset_plot, timeaxis, image_file=plotfile, display=display, normalized=bool(ram), intervalized=bool(interval))
+    plotit(dataset_plot, timeaxis, image_file=plotfile, display=display, normalized=bool(ram), intervalized=bool(interval), logarithmicy=logy)
 
 def parse_args():
     fmt_cls = argparse.RawDescriptionHelpFormatter
@@ -176,6 +178,8 @@ def parse_args():
     parser.add_argument(dest='datafile', metavar='FILENAME', default='-',
                         help='file with vmstat output, none or "-" means read from stdandard input')
 
+    parser.add_argument('-l', '--logarithmicy', dest='logy', action='store_true',
+                        help='use a logarthmic scale for data axis', default=False)
     parser.add_argument('-d', '--display', dest='display', action='store_true',
                         help='display plot data')
     parser.add_argument('-p', '--plot', dest='plot', metavar='FILENAME',
@@ -222,7 +226,7 @@ def main():
     if ram:
         ram /= 1024
 
-    doit(args.datafile, cols, ram, args.time, args.plot, args.display)
+    doit(args.datafile, cols, ram, args.time, args.plot, args.display, args.logy)
 
 if __name__ == '__main__':
     main()
