@@ -180,7 +180,7 @@ def parse_args():
     parser.add_argument('-p', '--plot', dest='plot', metavar='FILENAME',
                         help='save plot data to .svg image file')
     parser.add_argument('-t', '--time', dest='time', metavar='INTEGER',
-                        help='vmstat time interval')
+                        help='vmstat time interval (in seconds)')
 
     parser.add_argument('-r', '--ram', dest='ram', metavar='SIZE',
                         help='total size of RAM to normalize, if absent, do not normalize, use size in MB. You can use GB, MB, KB, suffixes.')
