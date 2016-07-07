@@ -61,8 +61,8 @@ HUMAN_HEADERS = {
     'st': 'Stolen VM CPU %',
 }
 
-def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
-           intervalized=False, logarithmicy=True):
+def plotit(dataset, timeaxis, image_file=None, display=False,
+           logarithmicy=True):
     '''Plot the graph, X axis being time (in seconds or in vmstat intervals)
     Y axis is the data from the selected columns, logarithmic or natural scaling
     '''
@@ -74,7 +74,7 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
 
     axes = fig.add_subplot(1, 1, 1)
 
-    if intervalized:
+    if isinstance(timeaxis[0], datetime.datetime):
         axes.xaxis.set_major_locator(dates.MinuteLocator(interval=10))
         axes.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
 
@@ -169,7 +169,7 @@ def doit(datafile, cols, ram, interval, plotfile, display, logy):
     dataset_plot = {h: dataset[h] for h in cols}
 
     plotit(dataset_plot, timeaxis, image_file=plotfile, display=display,
-           normalized=bool(ram), intervalized=bool(interval), logarithmicy=logy)
+           logarithmicy=logy)
 
 def parse_args():
     '''Handle CLI args'''
