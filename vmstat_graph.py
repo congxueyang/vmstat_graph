@@ -63,6 +63,10 @@ HUMAN_HEADERS = {
 
 def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
            intervalized=False, logarithmicy=True):
+    '''Plot the graph, X axis being time (in seconds or in vmstat intervals)
+    Y axis is the data from the selected columns, logarithmic or natural scaling
+    '''
+
     fig = plt.figure()
 
     plt.title('Graph of vmstat output')
@@ -108,9 +112,11 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
         plt.show()
 
 def normalize(dataset, total):
+    '''Make dataset from absolute values to %-age of total'''
     return [d * 100 / total for d in dataset]
 
 def read_input(fin):
+    '''Get data from given file containing vmstat output'''
     headers = None
     data = []
     for line in fin:
@@ -126,6 +132,7 @@ def read_input(fin):
     return headers, data
 
 def doit(datafile, cols, ram, interval, plotfile, display, logy):
+    '''Get vmstat output data and plot it as a graph'''
     if datafile is None or datafile == '-':
         headers, data = read_input(sys.stdin)
     else:
@@ -165,6 +172,7 @@ def doit(datafile, cols, ram, interval, plotfile, display, logy):
            normalized=bool(ram), intervalized=bool(interval), logarithmicy=logy)
 
 def parse_args():
+    '''Handle CLI args'''
     fmt_cls = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=fmt_cls)
@@ -192,6 +200,7 @@ def parse_args():
     return parser
 
 def main():
+    '''Parse CLI args and the plot the graph'''
     parser = parse_args()
     args = parser.parse_args()
 
