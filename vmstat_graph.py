@@ -16,6 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+'''
+Plot a graph from some vmstat output
+
+procs -----------memory---------- --swap- --io-- -system-- ------cpu-----
+r  b  swpd    free  buff   cache  si   so bi  bo   in   cs us sy id wa st
+2  0     0 5075832 29076 6839980   0    0 33 873 2669 5057  5  8 83  4  0
+
+You can :
+  - select the interesting columns
+  - ask for a logarthmic scale for the data axis
+  - tell the total RAM in order to get %-age instead of absolute numbers
+  - give the vmstat time interval to get Y axis in time units instead of intervals.
+  - get the graph in a GUI window and/or a saved svg file.
+'''
+
 import sys
 import time
 import datetime
@@ -153,12 +168,10 @@ def doit(datafile, cols, ram, interval, plotfile, display):
 
     plotit(dataset_plot, timeaxis, image_file=plotfile, display=display, normalized=bool(ram), intervalized=bool(interval))
 
-#~ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
-#~ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
-#~ 2  0      0 5075832  29076 6839980    0    0    33   873 2669 5057  5  8 83  4  0
-
 def parse_args():
-    parser = argparse.ArgumentParser(description='Graph vmstat output')
+    fmt_cls = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=fmt_cls)
 
     parser.add_argument(dest='datafile', metavar='FILENAME', default='-',
                         help='file with vmstat output, none or "-" means read from stdandard input')
