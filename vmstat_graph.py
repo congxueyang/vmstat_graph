@@ -101,10 +101,6 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, 
         if header in HUMAN_HEADERS:
             plotter(timeaxis, data, marker=mks.pop(), label=HUMAN_HEADERS[header])
 
-    # Give some horizontal room
-    #xmin, xmax = plt.xlim()
-    #plt.xlim(0, xmax * 1.1)
-
     # Put legend in top left corner
     plt.legend(loc=1)
 
