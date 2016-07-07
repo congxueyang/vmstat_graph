@@ -32,15 +32,14 @@ You can :
 '''
 
 import sys
-import time
 import datetime
 import argparse
-
-import matplotlib.pyplot as plt
-import matplotlib.markers
-from matplotlib import dates
+import textwrap
 
 import numpy as np
+
+import matplotlib.pyplot as plt
+from matplotlib import dates
 
 HUMAN_HEADERS = {
     'r': 'Runnable processes',
@@ -69,23 +68,23 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
     plt.title('Graph of vmstat output')
     plt.rc('lines', linewidth=1, linestyle='-')
 
-    ax = fig.add_subplot(1, 1, 1)
+    axes = fig.add_subplot(1, 1, 1)
 
     if intervalized:
-        ax.xaxis.set_major_locator(dates.MinuteLocator(interval=10))
-        ax.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
+        axes.xaxis.set_major_locator(dates.MinuteLocator(interval=10))
+        axes.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
 
         # position of the labels
         xtk_loc = [datetime.datetime(2016, 1, 1, 0, 0) +
                    datetime.timedelta(hours=i)
                    for i in np.arange(0, 12.1, 1./6)]
-        ax.set_xticks(xtk_loc)
-        ax.tick_params(axis='both', direction='out', top='off', right='off')
+        axes.set_xticks(xtk_loc)
+        axes.tick_params(axis='both', direction='out', top='off', right='off')
 
         fig.autofmt_xdate(rotation=90, ha='center')
 
-    ax.set_ylabel('Data', labelpad=10, fontsize=14)
-    ax.set_xlabel('Time', labelpad=20, fontsize=14)
+    axes.set_ylabel('Data', labelpad=10, fontsize=14)
+    axes.set_xlabel('Time', labelpad=20, fontsize=14)
 
     # Experiment with logarithmic scale
     if logarithmicy:
@@ -147,17 +146,17 @@ def doit(datafile, cols, ram, interval, plotfile, display, logy):
 
     # Rearrange data columns into rows
     dataset = {header: [int(dataline[idx]) for dataline in data]
-                        for idx, header in enumerate(headers)}
+               for idx, header in enumerate(headers)}
 
     if ram:
         # Normalize to total RAM size
-        for h in ('free', 'buff', 'cache', 'swpd'):
-            dataset[h] = normalize(dataset[h], ram)
-            HUMAN_HEADERS[h] += ' %'
+        for header in ('free', 'buff', 'cache', 'swpd'):
+            dataset[header] = normalize(dataset[header], ram)
+            HUMAN_HEADERS[header] += ' %'
     else:
         # Plot as-is, in MBs
-        for h in ('free', 'buff', 'cache', 'swpd'):
-            HUMAN_HEADERS[h] += ' (MB)'
+        for header in ('free', 'buff', 'cache', 'swpd'):
+            HUMAN_HEADERS[header] += ' (MB)'
 
     # Filter only interesting vmstat columns
     dataset_plot = {h: dataset[h] for h in cols}
@@ -182,8 +181,10 @@ def parse_args():
     parser.add_argument('-t', '--time', dest='time', metavar='INTEGER',
                         help='vmstat time interval (in seconds)')
 
+    ram_help = textwrap.dedent('''total size of RAM to normalize, if absent, do
+        not normalize, use size in MB. You can use GB, MB, KB, suffixes.''')
     parser.add_argument('-r', '--ram', dest='ram', metavar='SIZE',
-                        help='total size of RAM to normalize, if absent, do not normalize, use size in MB. You can use GB, MB, KB, suffixes.')
+                        help=ram_help)
 
     parser.add_argument('-c', '--columns', dest='cols', metavar='STRING',
                         help='comma-separated list of columns, defaults to all columns')
