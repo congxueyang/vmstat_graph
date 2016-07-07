@@ -108,9 +108,12 @@ def doit(datafile, cols, ram, interval, plotfile, display):
         with open(datafile) as fin:
             headers, data = read_input(fin)
 
+    # Default to plot all vmstat columns, which makes for a busy graph
     if not cols:
         cols = headers
 
+    # Time axis is either per vmstat interval, or if interval is given, plotted
+    # in nice H:M:S
     timeaxis = range(len(data))
     if interval:
         interval = int(interval)
@@ -125,10 +128,13 @@ def doit(datafile, cols, ram, interval, plotfile, display):
             dataset[h] = normalize(dataset[h], ram)
             HUMAN_HEADERS[h] += ' %'
     else:
+        # Plot as-is, in MBs
         for h in ('free', 'buff', 'cache', 'swpd'):
             HUMAN_HEADERS[h] += ' (MB)'
 
+    # Filter only interesting vmstat columns
     dataset_plot = {h: dataset[h] for h in cols}
+
     plotit(dataset_plot, timeaxis, image_file=plotfile, display=display, normalized=bool(ram), intervalized=bool(interval))
 
 #~ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
@@ -146,7 +152,7 @@ def parse_args():
     parser.add_argument('-p', '--plot', dest='plot', metavar='FILENAME',
                         help='save plot data to .svg image file')
     parser.add_argument('-t', '--time', dest='time', metavar='INTEGER',
-                        help='time interval')
+                        help='vmstat time interval')
 
     parser.add_argument('-r', '--ram', dest='ram', metavar='SIZE',
                         help='total size of RAM to normalize, if absent, do not normalize, use size in MB. You can use GB, MB, KB, suffixes.')
@@ -186,7 +192,6 @@ def main():
                 sys.exit(1)
     if ram:
         ram /= 1024
-        print 'Total RAM (MB):', ram
 
     doit(args.datafile, cols, ram, args.time, args.plot, args.display)
 
