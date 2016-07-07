@@ -62,7 +62,8 @@ HUMAN_HEADERS = {
     'st': 'Stolen VM CPU %',
 }
 
-def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, intervalized=False, logarithmicy=True):
+def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False,
+           intervalized=False, logarithmicy=True):
     fig = plt.figure()
 
     plt.title('Graph of vmstat output')
@@ -76,7 +77,8 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, 
 
         # position of the labels
         xtk_loc = [datetime.datetime(2016, 1, 1, 0, 0) +
-                   datetime.timedelta(hours=i) for i in np.arange(0,12.1,1./6)]
+                   datetime.timedelta(hours=i)
+                   for i in np.arange(0, 12.1, 1./6)]
         ax.set_xticks(xtk_loc)
         ax.tick_params(axis='both', direction='out', top='off', right='off')
 
@@ -140,10 +142,12 @@ def doit(datafile, cols, ram, interval, plotfile, display, logy):
     timeaxis = range(len(data))
     if interval:
         interval = int(interval)
-        timeaxis = [datetime.datetime(2016, 1, 1, 0, 0) + datetime.timedelta(seconds=x * interval) for x in timeaxis]
+        timeaxis = [datetime.datetime(2016, 1, 1, 0, 0) +
+                    datetime.timedelta(seconds=x * interval) for x in timeaxis]
 
     # Rearrange data columns into rows
-    dataset = {header: [int(dataline[idx]) for dataline in data] for idx, header in enumerate(headers)}
+    dataset = {header: [int(dataline[idx]) for dataline in data]
+                        for idx, header in enumerate(headers)}
 
     if ram:
         # Normalize to total RAM size
@@ -158,7 +162,8 @@ def doit(datafile, cols, ram, interval, plotfile, display, logy):
     # Filter only interesting vmstat columns
     dataset_plot = {h: dataset[h] for h in cols}
 
-    plotit(dataset_plot, timeaxis, image_file=plotfile, display=display, normalized=bool(ram), intervalized=bool(interval), logarithmicy=logy)
+    plotit(dataset_plot, timeaxis, image_file=plotfile, display=display,
+           normalized=bool(ram), intervalized=bool(interval), logarithmicy=logy)
 
 def parse_args():
     fmt_cls = argparse.RawDescriptionHelpFormatter
@@ -216,7 +221,8 @@ def main():
     if ram:
         ram /= 1024
 
-    doit(args.datafile, cols, ram, args.time, args.plot, args.display, args.logy)
+    doit(args.datafile, cols, ram, args.time, args.plot,
+         args.display, args.logy)
 
 if __name__ == '__main__':
     main()
