@@ -81,7 +81,7 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, 
         ax.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
 
         # position of the labels
-        xtk_loc = [datetime.datetime(2016, 1, 1, 0, 0) + 
+        xtk_loc = [datetime.datetime(2016, 1, 1, 0, 0) +
                    datetime.timedelta(hours=i) for i in np.arange(0,12.1,1./6)]
         ax.set_xticks(xtk_loc)
         ax.tick_params(axis='both', direction='out', top='off', right='off')
