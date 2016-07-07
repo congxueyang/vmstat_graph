@@ -63,12 +63,6 @@ HUMAN_HEADERS = {
 }
 
 def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, intervalized=False, logarithmicy=True):
-    # Prepare marker list
-    mks = set(matplotlib.markers.MarkerStyle().markers.keys())
-    # Remove unwanted ones
-    #~ mks -= set((None, 'None', '', ' ', '|', '_', '.', ',', '+', '-', 'd', 'x', '*'))
-    #~ mks = ['<', '>', '^', 'v', 'o', 'D', 's', 'p', 'h', ]
-
     fig = plt.figure()
 
     plt.title('Graph of vmstat output')
@@ -99,7 +93,7 @@ def plotit(dataset, timeaxis, image_file=None, display=False, normalized=False, 
 
     for header, data in dataset.items():
         if header in HUMAN_HEADERS:
-            plotter(timeaxis, data, marker=mks.pop(), label=HUMAN_HEADERS[header])
+            plotter(timeaxis, data, label=HUMAN_HEADERS[header])
 
     # Put legend in top left corner
     plt.legend(loc=1)
