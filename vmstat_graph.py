@@ -67,6 +67,10 @@ def plotit(dataset, timeaxis, image_file=None, display=False,
     Y axis is the data from the selected columns, logarithmic or natural scaling
     '''
 
+    if not timeaxis or len(timeaxis < 2):
+        print 'Too few data to display...'
+        return
+
     fig = plt.figure()
 
     plt.title('Graph of vmstat output')
