@@ -180,11 +180,11 @@ def parse_args():
     parser.add_argument(dest='datafile', metavar='FILENAME', default='-',
                         help='file with vmstat output, none or "-" means read from stdandard input')
 
-    parser.add_argument('-l', '--logarithmicy', dest='logy', action='store_true',
+    parser.add_argument('-l', '--logarithmic', dest='logy', action='store_true',
                         help='use a logarthmic scale for data axis', default=False)
     parser.add_argument('-d', '--display', dest='display', action='store_true',
                         help='display plot data')
-    parser.add_argument('-p', '--plot', dest='plot', metavar='FILENAME',
+    parser.add_argument('-s', '--svg', dest='svg', metavar='FILENAME',
                         help='save plot data to .svg image file')
     parser.add_argument('-t', '--time', dest='time', metavar='INTEGER',
                         help='vmstat time interval (in seconds)')
@@ -195,7 +195,7 @@ def parse_args():
                         help=ram_help)
 
     parser.add_argument('-c', '--columns', dest='cols', metavar='STRING',
-                        help='comma-separated list of columns, defaults to all columns')
+                        help='comma-separated list of columns, defaults to show all columns')
 
     return parser
 
@@ -231,8 +231,7 @@ def main():
     if ram:
         ram /= 1024
 
-    doit(args.datafile, cols, ram, args.time, args.plot,
-         args.display, args.logy)
+    doit(args.datafile, cols, ram, args.time, args.svg, args.display, args.logy)
 
 if __name__ == '__main__':
     main()
